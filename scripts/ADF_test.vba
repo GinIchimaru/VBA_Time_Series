@@ -1,6 +1,6 @@
 Option Explicit
 
-
+'Provera
 '#####################################################################################################
 '# ADFtest is the main function, it is explained in usage sheet. It is mainly, a case statement of   #
 '# ADFRegression function depending on lag and LagCriteria arguments. For the time being theese are  #
