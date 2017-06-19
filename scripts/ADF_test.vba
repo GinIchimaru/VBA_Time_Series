@@ -1,6 +1,6 @@
 Option Explicit
 
-'Provera za lokal
+
 '#####################################################################################################
 '# ADFtest is the main function, it is explained in usage sheet. It is mainly, a case statement of   #
 '# ADFRegression function depending on lag and LagCriteria arguments. For the time being theese are  #
@@ -369,6 +369,7 @@ Dim ii As Integer
 ' output - a (T-1) x 1 array of double.
 '-----------------------------------------------------------------------------------------------------
 End Function
+
 
 
 
