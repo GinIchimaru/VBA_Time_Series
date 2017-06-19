@@ -1,11 +1,11 @@
 # VBA Project: VBA_Time_Series
-This repo (VBA_Time_Series) was automatically created on 6/19/2017 9:13:17 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
+This repo (VBA_Time_Series) was automatically created on 6/19/2017 9:33:35 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
 ## Details for VBA project VBA_Time_Series
 Where possibile directly referenced or sub referenced library sources have been copied to this repository  
 ### Modules of VBA_Time_Series included in this repo
 *name*|*type*|*source*|*docs*  
 ---|---|---|---  
-Module1|StdModule|[Module1.vba](scripts/Module1.vba "script source")|[Module1_vba.md](scripts/Module1_vba.md "script docs")  
+ADF_test|StdModule|[ADF_test.vba](scripts/ADF_test.vba "script source")|[ADF_test_vba.md](scripts/ADF_test_vba.md "script docs")  
   
 ### All dependencies and sub dependencies in this repo  
 *name*|*type*|*source*|*docs*  
