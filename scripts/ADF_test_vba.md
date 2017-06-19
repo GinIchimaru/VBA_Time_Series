@@ -2,7 +2,7 @@
 ## VBA Module: **[ADF_test](/scripts/ADF_test.vba "source is here")**
 ### Type: StdModule  
 
-This procedure list for repo (VBA_Time_Series) was automatically created on 6/19/2017 9:43:34 PM by VBAGit.
+This procedure list for repo (VBA_Time_Series) was automatically created on 6/19/2017 9:49:35 PM by VBAGit.
 For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation")
 
 Below is a section for each procedure in ADF_test
