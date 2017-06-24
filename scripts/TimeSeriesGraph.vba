@@ -64,31 +64,3 @@ Function AddChartObject1(rng As Range, Optional width As Integer = 375, Optional
     
 End Function
 
-
-Sub Macro25()
-'
-' Macro25 Macro
-'
-
-'
-    ActiveSheet.ChartObjects("$A$1:$A$200").Activate
-    ActiveChart.Parent.Delete
-End Sub
-Sub Macro26()
-'
-' Macro26 Macro
-'
-
-'
-    ActiveSheet.ChartObjects("$A$1:$A$200").Activate
-    ActiveSheet.ChartObjects("$A$1:$A$200").Activate
-    ActiveSheet.Shapes("$A$1:$A$200").Fill.Visible = msoFalse
-End Sub
-Sub Macro27()
-'
-' Macro27 Macro
-'
-
-'
-    ActiveSheet.Shapes("$A$1:$A$200").Line.Visible = msoFalse
-End Sub
