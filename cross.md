@@ -1,5 +1,5 @@
 # VBA Project: VBA_Time_Series
-This cross reference list for repo (VBA_Time_Series) was automatically created on 6/20/2017 12:38:21 AM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation")
+This cross reference list for repo (VBA_Time_Series) was automatically created on 6/24/2017 1:58:32 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation")
 You can see [library and dependency information here](dependencies.md)
 
 ###Below is a cross reference showing which modules and procedures reference which others
