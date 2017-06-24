@@ -1,10 +1,11 @@
 # VBA Project: VBA_Time_Series
-This repo (VBA_Time_Series) was automatically created on 6/24/2017 1:58:32 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
+This repo (VBA_Time_Series) was automatically created on 6/24/2017 2:01:54 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
 ## Details for VBA project VBA_Time_Series
 Where possibile directly referenced or sub referenced library sources have been copied to this repository  
 ### Modules of VBA_Time_Series included in this repo
 *name*|*type*|*source*|*docs*  
 ---|---|---|---  
+TimeSeriesGraph|StdModule|[TimeSeriesGraph.vba](scripts/TimeSeriesGraph.vba "script source")|[TimeSeriesGraph_vba.md](scripts/TimeSeriesGraph_vba.md "script docs")  
   
 ### All dependencies and sub dependencies in this repo  
 *name*|*type*|*source*|*docs*  
