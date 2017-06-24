@@ -1,6 +1,6 @@
 # Time Series
 Unit root tests, ARIMAX, GARCH models in VBA for the time being.
-Files with extension .vba contains the actual code. The repo was committed to git with [VbaGitBootStrap](https://github.com/brucemcpherson/VbaGit). For now it contains only:  
+Files with extension .vba contain the actual code. The repo was committed to git with [VbaGitBootStrap](https://github.com/brucemcpherson/VbaGit). For now it contains only:  
 *   Augmented Dickey Fuller test
 *   Phillips Perron test
 *   KPSS test
