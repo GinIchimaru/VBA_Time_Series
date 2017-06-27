@@ -1,5 +1,5 @@
 # VBA Project: VBA_Time_Series
-This repo (VBA_Time_Series) was automatically created on 6/24/2017 2:01:54 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
+This repo (VBA_Time_Series) was automatically created on 6/27/2017 10:56:31 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
 ## Details for VBA project VBA_Time_Series
 Where possibile directly referenced or sub referenced library sources have been copied to this repository  
 ### Modules of VBA_Time_Series included in this repo
