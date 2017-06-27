@@ -13,54 +13,61 @@ Function AddChartObject1(rng As Range, Optional width As Integer = 375, Optional
     
     Set myChtObj = ActiveSheet.ChartObjects.Add _
                    (Left:=100, width:=width, Top:=75, height:=height)
-    myChtObj.Chart.SetSourceData Source:=rng
-    myChtObj.Chart.ChartType = xlXYScatterSmoothNoMarkers
+    
+    
      '.Name = "aaaa" ActiveCell.Address
     ChartName = myChtObj.Name
     ActiveSheet.Shapes(ChartName).Name = rng.Address
     
     
-    myChtObj.Chart.HasLegend = False
-    myChtObj.Chart.FullSeriesCollection(1).Smooth = False
-    
     With myChtObj.Chart
-    .Axes(xlCategory, xlPrimary).HasMajorGridlines = True
-    .Axes(xlValue, xlPrimary).HasMajorGridlines = True
+        .ChartType = xlXYScatterSmoothNoMarkers
+        .SetSourceData Source:=rng
+        .Axes(xlCategory, xlPrimary).HasMajorGridlines = True
+        .Axes(xlValue, xlPrimary).HasMajorGridlines = True
+        .HasLegend = False
+        .FullSeriesCollection(1).Smooth = False
+        With .SeriesCollection(1).Format
+            .Line.ForeColor.RGB = RGB(0, 0, 0)
+            .Line.Visible = msoTrue
+            .Line.Weight = 1
+            With .Glow
+                .Color.RGB = RGB(102, 255, 102)
+                .Color.TintAndShade = 0
+                .Color.Brightness = 0
+                .Transparency = 0.7
+                .Radius = 6
+            End With
+        End With
+        With .Axes(xlCategory)
+            With .MajorGridlines.Format.Line
+                .DashStyle = msoLineDash
+                .ForeColor.ObjectThemeColor = msoThemeColorText1
+                .ForeColor.TintAndShade = 0
+                .ForeColor.Brightness = 0
+                .Transparency = 0.2
+            End With
+            .TickLabels.Font.Name = "Times New Roman"
+            .Format.Line.ForeColor.ObjectThemeColor = msoThemeColorText1
+        End With
+        With .Axes(xlValue)
+            With .MajorGridlines.Format.Line
+                .DashStyle = msoLineDash
+                .ForeColor.ObjectThemeColor = msoThemeColorText1
+                .ForeColor.TintAndShade = 0
+                .ForeColor.Brightness = 0
+                .Transparency = 0.2
+            End With
+            .TickLabels.Font.Name = "Times New Roman"
+            .Format.Line.ForeColor.ObjectThemeColor = msoThemeColorText1
+            .Crosses = xlMinimum
+        End With
     End With
 
-    With myChtObj.Chart.SeriesCollection(1).Format
-        .Line.ForeColor.RGB = RGB(0, 0, 0)
-        .Line.Visible = msoTrue
-        .Line.Weight = 1
-        With .Glow
-            .Color.RGB = RGB(102, 255, 102)
-            .Color.TintAndShade = 0
-            .Color.Brightness = 0
-            .Transparency = 0.8000000119
-            .Radius = 6
-        End With
-    
-    End With
-    
-   With myChtObj.Chart.Axes(xlCategory).MajorGridlines.Format.Line
-        .DashStyle = msoLineDash
-        .ForeColor.ObjectThemeColor = msoThemeColorText1
-        .ForeColor.TintAndShade = 0
-        .ForeColor.Brightness = 0
-        .Transparency = 0.2
-    End With
-    With myChtObj.Chart.Axes(xlValue).MajorGridlines.Format.Line
-        .DashStyle = msoLineDash
-        .ForeColor.ObjectThemeColor = msoThemeColorText1
-        .ForeColor.TintAndShade = 0
-        .ForeColor.Brightness = 0
-        .Transparency = 0.2
-    End With
     ActiveSheet.Shapes(ChartName).Line.Visible = msoFalse
     ActiveSheet.Shapes(ChartName).Fill.Visible = msoFalse
-
-
     AddChartObject1 = "Real Stats Chart " & rng.Address
     
 End Function
+
 
