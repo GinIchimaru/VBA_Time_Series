@@ -1,17 +1,17 @@
 # VBA Project: VBA_Time_Series
-This repo (VBA_Time_Series) was automatically created on 7/18/2017 12:30:10 AM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
+This repo (VBA_Time_Series) was automatically created on 8/14/2017 1:06:14 AM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
 ## Details for VBA project VBA_Time_Series
 Where possibile directly referenced or sub referenced library sources have been copied to this repository  
 ### Modules of VBA_Time_Series included in this repo
 *name*|*type*|*source*|*docs*  
 ---|---|---|---  
-ArimaForecast|StdModule|[ArimaForecast.vba](scripts/ArimaForecast.vba "script source")|[ArimaForecast_vba.md](scripts/ArimaForecast_vba.md "script docs")  
+ARIMA|StdModule|[ARIMA.vba](scripts/ARIMA.vba "script source")|[ARIMA_vba.md](scripts/ARIMA_vba.md "script docs")  
   
 ### All dependencies and sub dependencies in this repo  
 *name*|*type*|*source*|*docs*  
 ---|---|---|---  
-ARIMA|StdModule|[ARIMA.vba](libraries/ARIMA.vba "library source")|[ARIMA_vba.md](libraries/ARIMA_vba.md "library docs")  
 LevenbergMarquart|ClassModule|[LevenbergMarquart.cls](libraries/LevenbergMarquart.cls "library source")|[LevenbergMarquart_cls.md](libraries/LevenbergMarquart_cls.md "library docs")  
+ArimaForecast|StdModule|[ArimaForecast.vba](libraries/ArimaForecast.vba "library source")|[ArimaForecast_vba.md](libraries/ArimaForecast_vba.md "library docs")  
   
 ###Excel references  
 ####These references were detected in the workbook (ARMA CSS.2.xlsb) this repo was created from. You may not need them all  
