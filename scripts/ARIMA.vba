@@ -21,9 +21,9 @@ Option Explicit
 '              MA_lags are integers denoting number of lagged terms of AR and
 '              MA components. If omited, all take values 0.2!!!
 
-'Function arma_predicted:
-'   Private function that calculates predicted values of range TimeSeriesRangefor given
-'   coefficients. This is the functions that enters as an input in function ca
+'Function arma_fitted:
+'   Private function that calculates FITTED values of range TimeSeriesRange for given
+'   coefficients. This is the functions that enters as an input in function
 '   calibrateParameters from Levenberg class in ARMA_CS function
 '
 '       Parameters:
@@ -57,7 +57,7 @@ Option Explicit
 
 
 'On the module level 4 variables have been declared in order to be
-'shared between ARMA_CSS and arma_predicted since otherwise
+'shared between ARMA_CSS and arma_fitted since otherwise
 'Levenberg.calibrateParameters would treat them as an optimization variable
 
 
@@ -80,9 +80,9 @@ Function ARMA_CSS(TimeSeriesRange As Range, _
                   Optional Fixed_values As Variant)
 
 Dim params()                   As Double           'parameters for optimization-initial values
-Dim i, j, jj, ii, num_of_fixed As Integer
+Dim i As Integer, j As Integer, jj As Integer, ii As Integer, num_of_fixed As Integer
 Dim T                          As Integer          'time series lenght
-Dim independent_variables()    As Double           'whole time series, used in arma_predicted for lagged terms (rhs of ARMA equation)
+Dim independent_variables()    As Double           'whole time series, used in arma_fitted for lagged terms (rhs of ARMA equation)
 Dim dependent_variables()      As Double           'level time series without first AR_lag point, lhs of ARMA equation
 Dim res()                      As Double           'optimized parameters
 Dim residuals                  As Variant
@@ -138,19 +138,39 @@ End If
 
 'check initial values to be one dimension
 If IsMissing(initial_values) = False Then
-    If NumberOfDimensions(initial_values) > 1 Or UBound(initial_values) > (lags(1) + lags(2) + 1) Then
-        ARMA_CSS = CVErr(xlErrValue)
-    Exit Function
+'On Error GoTo keepOn
+    If TypeName(initial_values) = "Range" Then
+        If NumberOfDimensions(initial_values) > 1 Then
+            ARMA_CSS = CVErr(xlErrValue)
+            Exit Function
+        End If
+    ElseIf TypeName(initial_values) = "Variant()" Then
+        If UBound(initial_values) > (lags(1) + lags(2) + 1) Then
+            ARMA_CSS = CVErr(xlErrValue)
+            Exit Function
+        End If
+'keepOn:
     End If
 End If
 
 'check fixed values to be one dimension
 missing_fixed_parameters = IsMissing(Fixed_values)
-If missing_fixed_parameters = False Then
-    If NumberOfDimensions(Fixed_values) > 1 Or UBound(Fixed_values) > (lags(1) + lags(2) + 1) Then
-        ARMA_CSS = CVErr(xlErrValue)
-    Exit Function
+
+If IsMissing(Fixed_values) = False Then
+'On Error GoTo keepOn2
+    If TypeName(Fixed_values) = "Range" Then
+        If NumberOfDimensions(Fixed_values) > 1 Then
+            ARMA_CSS = CVErr(xlErrValue)
+            Exit Function
+'keepOn2:
+        End If
+    ElseIf TypeName(Fixed_values) = "Variant()" Then
+        If UBound(Fixed_values) > (lags(1) + lags(2) + 1) Then
+            ARMA_CSS = CVErr(xlErrValue)
+            Exit Function
+        End If
     End If
+
     ReDim Fixed_Parameters(1 To (lags(1) + lags(2) + 1))
     For i = 1 To (lags(1) + lags(2) + 1)
         Fixed_Parameters(i) = Fixed_values(i)
@@ -174,15 +194,23 @@ ReDim params(1 To (AR_lag + MA_lag + 1))
 If IsMissing(initial_values) Then
     For i = 1 To (AR_lag + MA_lag + 1)
         If missing_fixed_parameters = False Then
-        If Fixed_Parameters(i) <> "" Then params(i) = Fixed_Parameters(i)
+            If Fixed_Parameters(i) <> vbNullString Then
+                params(i) = Fixed_Parameters(i)
+            Else
+                params(i) = 0.2
+            End If
         Else
             params(i) = 0.2
         End If
     Next i
 Else
     For i = 1 To (AR_lag + MA_lag + 1)
-        If Fixed_Parameters(i) <> "" Then
-            params(i) = Fixed_Parameters(i)
+        If missing_fixed_parameters = False Then
+            If Fixed_Parameters(i) <> "" Then
+                params(i) = Fixed_Parameters(i)
+            Else
+                params(i) = initial_values(i)
+            End If
         Else
             params(i) = initial_values(i)
         End If
@@ -214,8 +242,8 @@ End With
 Dim levObj As New LevenbergMarquart
 
 'estimate the coefficients by minimizing:
-'           sum((y-arma_predicted(params, independent_variables)^2)
-res = levObj.CalibrateParameters("arma_predicted", independent_variables, dependent_variables, params)
+'           sum((y-arma_fitted(params, independent_variables)^2)
+res = levObj.CalibrateParameters("arma_fitted", independent_variables, dependent_variables, params)
 
 '|------------------------------------------------------------------------------------|
 '|-------------------------   calculating statistics     -----------------------------|
@@ -366,6 +394,9 @@ final_result(5, 3) = LogLik
 final_result(5, 4) = AIC
 final_result(5, 5) = BIC
 
+Erase Fixed_Parameters 'IMPORTANT
+
+
 ARMA_CSS = final_result
 
 Exit Function
@@ -378,7 +409,7 @@ Resume Next
 End Function
 
 
-Function arma_predicted(params As Variant, TimeSeries() As Double)
+Private Function arma_fitted(params As Variant, TimeSeries() As Double)
 Dim T                   As Long
 Dim i                   As Long
 Dim j                   As Long
@@ -477,13 +508,13 @@ For i = 1 To (T - AR_lag)
     
 Next i
 
-arma_predicted = function_values
+arma_fitted = function_values
 
 End Function
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 'supporting functions                                              '
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-Function NumberOfDimensions(ByVal vArray As Variant) As Long
+Private Function NumberOfDimensions(ByVal vArray As Variant) As Long
 Dim errorcheck As Long
 Dim dimnum As Long
 On Error GoTo FinalDimension
@@ -498,7 +529,7 @@ FinalDimension:
 End Function
 
 
-Function Hessian_(FunctName, Parameters As Variant, TimeSeries_independent() As Double, TimeSeries_dependent() As Double, deltaX As Double)
+Private Function Hessian_(FunctName, parameters As Variant, TimeSeries_independent() As Double, TimeSeries_dependent() As Double, deltaX As Double)
 'Second-order derivatives based on function calls only (Dennis and Schnabel 1983, p. 80, 104):
 'for dense Hessian, n+n2/2 additional function calls are needed:
 Dim i, j               As Integer
@@ -515,7 +546,7 @@ Dim x4()               As Double
 Dim hes()              As Double
 Dim mis()               As Boolean
 
-NumOfDimensions = UBound(Parameters)
+NumOfDimensions = UBound(parameters)
 
 ReDim x(1 To NumOfDimensions)
 ReDim x2(1 To NumOfDimensions)
@@ -523,16 +554,16 @@ ReDim x3(1 To NumOfDimensions)
 ReDim x4(1 To NumOfDimensions)
 ReDim hes(1 To NumOfDimensions, 1 To NumOfDimensions)
 
-x = Parameters
+x = parameters
 
-f = Application.Run(FunctName, Parameters, TimeSeries_independent, TimeSeries_dependent)
+f = Application.Run(FunctName, parameters, TimeSeries_independent, TimeSeries_dependent)
 
 For i = 1 To NumOfDimensions
     For j = 1 To NumOfDimensions
     
-    x2 = Parameters
-    x3 = Parameters
-    x4 = Parameters
+    x2 = parameters
+    x3 = parameters
+    x4 = parameters
 
     x2(i) = x2(i) + deltaX
     x2(j) = x2(j) + deltaX
@@ -553,19 +584,19 @@ Hessian_ = hes
 
 End Function
 
-Function SS(params As Variant, independent_variables() As Double, dependent_variables() As Double)
+Private Function SS(params As Variant, independent_variables() As Double, dependent_variables() As Double)
     Dim errors() As Double
-    Dim predicted() As Variant
+    Dim fitted() As Variant
     Dim i As Long
     Dim n As Long
     
     n = UBound(dependent_variables)
-    predicted = arma_predicted(params, independent_variables)
+    fitted = arma_fitted(params, independent_variables)
     
     ReDim errors(1 To n)
     
     For i = 1 To n
-        errors(i) = dependent_variables(i) - predicted(i)
+        errors(i) = dependent_variables(i) - fitted(i)
     Next i
     
     SS = Application.WorksheetFunction.SumProduct(errors, errors)
