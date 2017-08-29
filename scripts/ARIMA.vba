@@ -20,6 +20,13 @@ Option Explicit
 '              terms and MA_lags initial values for MA terms, where AR_lags and
 '              MA_lags are integers denoting number of lagged terms of AR and
 '              MA components. If omited, all take values 0.2!!!
+            'Fixed_values - an array or range of (AR_lag+MA_lag+1) values
+'              starting from constant followed by AR_lags fixed values for AR
+'              terms and MA_lags fixed values for MA terms, where AR_lags and
+'              MA_lags are integers denoting number of lagged terms of AR and
+'              MA components. In order to leave parameter to be estimated ""
+'              should be put in its place if array is provided or blank cell
+'              if range is provided in order for that parameter to be estimated
 
 'Function arma_fitted:
 '   Private function that calculates FITTED values of range TimeSeriesRange for given
@@ -80,7 +87,7 @@ Function ARMA_CSS(TimeSeriesRange As Range, _
                   Optional Fixed_values As Variant)
 
 Dim params()                   As Double           'parameters for optimization-initial values
-Dim i As Integer, j As Integer, jj As Integer, ii As Integer, num_of_fixed As Integer
+Dim i As Integer, j As Integer, jj As Integer, ii As Integer, non_fixed As Integer
 Dim T                          As Integer          'time series lenght
 Dim independent_variables()    As Double           'whole time series, used in arma_fitted for lagged terms (rhs of ARMA equation)
 Dim dependent_variables()      As Double           'level time series without first AR_lag point, lhs of ARMA equation
@@ -156,7 +163,7 @@ End If
 'check fixed values to be one dimension
 missing_fixed_parameters = IsMissing(Fixed_values)
 
-If IsMissing(Fixed_values) = False Then
+If missing_fixed_parameters = False Then
 'On Error GoTo keepOn2
     If TypeName(Fixed_values) = "Range" Then
         If NumberOfDimensions(Fixed_values) > 1 Then
@@ -222,7 +229,7 @@ T = TimeSeriesRange.Rows.Count
 
 'create lagged series to be used in as dependent variable
 'create lagged series to be base for calculating right side of arma equation,
-'   *note that this is column vector, there was no need of creating
+'   *note that this is column vector, there is no need of creating
 '    multiple column of laged series since we are looping them anyway
 ReDim independent_variables(1 To T)
 ReDim dependent_variables(1 To T - AR_lag)
@@ -261,24 +268,33 @@ size = T - AR_lag
 variance = SumOfSquares / size
 
 'calculate hessian of SS function for optimized coefficient values
-Hessian = Hessian_("SS", res, independent_variables, dependent_variables, 0.00001)
+'Hessian = Hessian_("SS", res, independent_variables, dependent_variables, 0.00001)
+
+Dim jacobian
+jacobian = levObj.jacobian
+
+With Application.WorksheetFunction
+    Hessian = .MMult(.Transpose(jacobian), jacobian)
+End With
+
+
 
 'in case of fixed parameters exclude zeros from hessian in order to take the inverse
 '   call the new created hessian HessianCorrected
 '   assign it to be new hessian
-If missing_fixed_parameters = False Then
+If missing_fixed_parameters = False Then 'calculate the number of non fixed parameters
     
-    num_of_fixed = 0
+    non_fixed = 0
     
     For i = 1 To UBound(Hessian)
-        If Fixed_Parameters(i) = "" Then num_of_fixed = 1 + num_of_fixed
+        If Fixed_Parameters(i) = "" Then non_fixed = 1 + non_fixed
     Next i
     
-    Dim HessianCorrected()
-    ReDim HessianCorrected(1 To num_of_fixed, 1 To num_of_fixed) As Variant
+    Dim HessianCorrected() 'create new hessian without fixed values
+    ReDim HessianCorrected(1 To non_fixed, 1 To non_fixed) As Variant
     
     ii = 0
-    
+    'take only variable values from hessian matrix into new corrected hessian
     For i = 1 To UBound(Hessian)
     If Fixed_Parameters(i) = "" Then
         ii = ii + 1
@@ -291,7 +307,9 @@ If missing_fixed_parameters = False Then
         Next j
     End If
     Next i
-    ReDim Hessian(1 To num_of_fixed, 1 To num_of_fixed)
+    
+    'overwrite the old hessian..
+    ReDim Hessian(1 To non_fixed, 1 To non_fixed)
     Hessian = HessianCorrected 'hessian without zeros
 End If
 
@@ -312,14 +330,15 @@ Next i
 'calculating coefficients errors
 ReDim coefs_errors(1 To UBound(params))
 ii = 0
+On Error GoTo errorHandler
 For i = 1 To UBound(params)
 If missing_fixed_parameters = False Then
     If Fixed_Parameters(i) <> "" Then
         ii = ii + 1
         coefs_errors(i) = CVErr(xlErrValue) 'put error on place of fixed parameter
     Else
-        On Error GoTo 0 'in case of negative values under the sqr
-        On Error GoTo errorHandler
+        'On Error GoTo 0 'in case of negative values under the sqr
+        
         coefs_errors(i) = Sqr(CoefErrorMatrix(i - ii, i - ii))
     End If
 Else
@@ -403,7 +422,7 @@ Exit Function
 
 errorHandler:
 
-coefs_errors(i) = CVErr(xlErrValue)
+coefs_errors(i) = CVErr(xlErrValue) 'in case of negative errors under sqrt due to numerical inprecision
 Resume Next
 
 End Function
@@ -526,79 +545,4 @@ Next
 FinalDimension:
     NumberOfDimensions = dimnum - 1
 
-End Function
-
-
-Private Function Hessian_(FunctName, parameters As Variant, TimeSeries_independent() As Double, TimeSeries_dependent() As Double, deltaX As Double)
-'Second-order derivatives based on function calls only (Dennis and Schnabel 1983, p. 80, 104):
-'for dense Hessian, n+n2/2 additional function calls are needed:
-Dim i, j               As Integer
-Dim NumOfDimensions    As Long
-Dim x()                As Double
-Dim ddy                As Variant
-Dim f                  As Variant
-Dim f2                 As Variant
-Dim f3                 As Variant
-Dim f4                 As Variant
-Dim x2()               As Double
-Dim x3()               As Double
-Dim x4()               As Double
-Dim hes()              As Double
-Dim mis()               As Boolean
-
-NumOfDimensions = UBound(parameters)
-
-ReDim x(1 To NumOfDimensions)
-ReDim x2(1 To NumOfDimensions)
-ReDim x3(1 To NumOfDimensions)
-ReDim x4(1 To NumOfDimensions)
-ReDim hes(1 To NumOfDimensions, 1 To NumOfDimensions)
-
-x = parameters
-
-f = Application.Run(FunctName, parameters, TimeSeries_independent, TimeSeries_dependent)
-
-For i = 1 To NumOfDimensions
-    For j = 1 To NumOfDimensions
-    
-    x2 = parameters
-    x3 = parameters
-    x4 = parameters
-
-    x2(i) = x2(i) + deltaX
-    x2(j) = x2(j) + deltaX
-    x3(i) = x3(i) + deltaX
-    x4(j) = x4(j) + deltaX
-    
-    f2 = Application.Run(FunctName, x2, TimeSeries_independent, TimeSeries_dependent)
-    f3 = Application.Run(FunctName, x3, TimeSeries_independent, TimeSeries_dependent)
-    f4 = Application.Run(FunctName, x4, TimeSeries_independent, TimeSeries_dependent)
-    
-    ddy = f2 - f3 - f4 + f
-    hes(i, j) = ddy / (deltaX * deltaX)
-    
-    Next j
-Next i
-
-Hessian_ = hes
-
-End Function
-
-Private Function SS(params As Variant, independent_variables() As Double, dependent_variables() As Double)
-    Dim errors() As Double
-    Dim fitted() As Variant
-    Dim i As Long
-    Dim n As Long
-    
-    n = UBound(dependent_variables)
-    fitted = arma_fitted(params, independent_variables)
-    
-    ReDim errors(1 To n)
-    
-    For i = 1 To n
-        errors(i) = dependent_variables(i) - fitted(i)
-    Next i
-    
-    SS = Application.WorksheetFunction.SumProduct(errors, errors)
-    
 End Function
