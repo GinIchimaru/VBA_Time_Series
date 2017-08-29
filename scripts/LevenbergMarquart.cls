@@ -239,7 +239,7 @@ Public fvec As Variant
 Private IndependentVariables_ As Variant
 Private ObservedVariables_ As Variant
 Private iflag_ As Variant
-Public fjac As Variant
+Public jacobian As Variant
 
 Private Sub lmdif(fcn As String, m As Single, n As Single, x As Variant, fvec As Variant, _
       ftol As Double, xtol As Double, gtol As Double, maxfev As Single, epsfcn As Double, _
@@ -1113,7 +1113,7 @@ Private Sub fdjac2(m As Single, n As Single, x As Variant, _
   Dim temp As Double
   Dim zero As Double
   zero = 0
-  
+  jacobian = fjac
   '     epsmch is the machine precision.
   epsmch = 1E-16
 '
@@ -1128,6 +1128,9 @@ Private Sub fdjac2(m As Single, n As Single, x As Variant, _
          x(j) = temp
          For i = 1 To m
             fjac(i, j) = (wa(i) - fvec(i)) / h
+            'added in order to record jacobian at the
+            'extremum since fjac is further edited
+            jacobian(i, j) = Sqr(2) * fjac(i, j)
          Next i
       Next j
 L30:
@@ -1147,11 +1150,11 @@ Public Function CalibrateParameters(FunctionName As String, _
                                     xvec As Variant, _
                                     yvec As Variant, _
                                     params As Variant, _
-                                    Optional ftol As Double = 0.00000001, _
-                                    Optional xtol As Double = 0.00000001, _
-                                    Optional gtol As Double = 0.00000001, _
-                                    Optional maxfeval As Single = 400, _
-                                    Optional epsfcn As Double = 0.00000001) As Variant
+                                    Optional ftol As Double = 0.00001, _
+                                    Optional xtol As Double = 0.00001, _
+                                    Optional gtol As Double = 0.00001, _
+                                    Optional maxfeval As Single = 700, _
+                                    Optional epsfcn As Double = 0.000000001) As Variant
   FunctionName_ = FunctionName
   Dim m As Single
   Dim n As Single
