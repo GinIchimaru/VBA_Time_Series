@@ -2,7 +2,7 @@
 ## VBA Module: **[LevenbergMarquart](/scripts/LevenbergMarquart.cls "source is here")**
 ### Type: ClassModule  
 
-This procedure list for repo (VBA_Time_Series) was automatically created on 6/20/2017 12:25:03 AM by VBAGit.
+This procedure list for repo (VBA_Time_Series) was automatically created on 8/29/2017 7:15:13 PM by VBAGit.
 For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation")
 
 Below is a section for each procedure in LevenbergMarquart
@@ -293,7 +293,7 @@ Return description: ****
 Scope: **Public**  
 Description: ****  
 
-*Public Function CalibrateParameters(FunctionName As String, xvec As Variant, yvec As Variant, params As Variant, Optional ftol As Double = 0.00000001, Optional xtol As Double = 0.00000001, Optional gtol As Double = 0.00000001, Optional maxfeval As Single = 400, Optional epsfcn As Double = 0.00000001) As Variant*  
+*Public Function CalibrateParameters(FunctionName As String, xvec As Variant, yvec As Variant, params As Variant, Optional ftol As Double = 0.00001, Optional xtol As Double = 0.00001, Optional gtol As Double = 0.00001, Optional maxfeval As Single = 700, Optional epsfcn As Double = 0.000000001) As Variant*  
 
 *name*|*type*|*optional*|*default*|*description*
 ---|---|---|---|---
@@ -301,8 +301,8 @@ FunctionName|String|False||
 xvec|Variant|False||
 yvec|Variant|False||
 params|Variant|False||
-ftol|Double|True| 0.00000001|
-xtol|Double|True| 0.00000001|
-gtol|Double|True| 0.00000001|
-maxfeval|Single|True| 400|
-epsfcn|Double|True| 0.00000001|
+ftol|Double|True| 0.00001|
+xtol|Double|True| 0.00001|
+gtol|Double|True| 0.00001|
+maxfeval|Single|True| 700|
+epsfcn|Double|True| 0.000000001|
