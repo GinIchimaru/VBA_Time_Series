@@ -1,20 +1,19 @@
 # VBA Project: VBA_Time_Series
-This repo (VBA_Time_Series) was automatically created on 8/14/2017 10:32:36 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
+This repo (VBA_Time_Series) was automatically created on 8/29/2017 7:15:13 PM by VBAGit.For more information see the [desktop liberation site](http://ramblings.mcpher.com/Home/excelquirks/drivesdk/gettinggithubready "desktop liberation") or [contact me on G+](https://plus.google.com/+BruceMcpherson "Bruce McPherson - GDE")  
 ## Details for VBA project VBA_Time_Series
 Where possibile directly referenced or sub referenced library sources have been copied to this repository  
 ### Modules of VBA_Time_Series included in this repo
 *name*|*type*|*source*|*docs*  
 ---|---|---|---  
 ARIMA|StdModule|[ARIMA.vba](scripts/ARIMA.vba "script source")|[ARIMA_vba.md](scripts/ARIMA_vba.md "script docs")  
+LevenbergMarquart|ClassModule|[LevenbergMarquart.cls](scripts/LevenbergMarquart.cls "script source")|[LevenbergMarquart_cls.md](scripts/LevenbergMarquart_cls.md "script docs")  
   
 ### All dependencies and sub dependencies in this repo  
 *name*|*type*|*source*|*docs*  
 ---|---|---|---  
-LevenbergMarquart|ClassModule|[LevenbergMarquart.cls](libraries/LevenbergMarquart.cls "library source")|[LevenbergMarquart_cls.md](libraries/LevenbergMarquart_cls.md "library docs")  
-ArimaForecast|StdModule|[ArimaForecast.vba](libraries/ArimaForecast.vba "library source")|[ArimaForecast_vba.md](libraries/ArimaForecast_vba.md "library docs")  
   
 ###Excel references  
-####These references were detected in the workbook (ARMA CSS.2.xlsb) this repo was created from. You may not need them all  
+####These references were detected in the workbook (ARMA CSS.3.xlsb) this repo was created from. You may not need them all  
 *name*|*guid*|*major*|*minor*|*description*  
 ---|---|---|---|---  
 VBA|{000204EF-0000-0000-C000-000000000046}|4|2|Visual Basic For Applications  
