@@ -99,6 +99,7 @@ Dim Hessian                    As Variant
 Dim inverseHessian             As Variant
 Dim coefs_errors()             As Variant
 Dim CoefErrorMatrix()          As Double
+Dim nOfFixedParams             As Long
 Dim size                       As Long
 Dim LogLik                     As Double
 Dim AIC                        As Double
@@ -195,7 +196,9 @@ AR_lag = lags(1)
 MA_lag = lags(2)
 
 'creating initial values for coefficients if omited in function
-'if missing initial values, assign values
+'   also:
+'       if missing initial values, assign values
+'       if provided fixed values assign to initial values in order to keep them fixed later on
 ReDim params(1 To (AR_lag + MA_lag + 1))
 
 If IsMissing(initial_values) Then
@@ -203,6 +206,7 @@ If IsMissing(initial_values) Then
         If missing_fixed_parameters = False Then
             If Fixed_Parameters(i) <> vbNullString Then
                 params(i) = Fixed_Parameters(i)
+                nOfFixedParams = nOfFixedParams + 1
             Else
                 params(i) = 0.2
             End If
@@ -215,6 +219,7 @@ Else
         If missing_fixed_parameters = False Then
             If Fixed_Parameters(i) <> "" Then
                 params(i) = Fixed_Parameters(i)
+                nOfFixedParams = nOfFixedParams + 1
             Else
                 params(i) = initial_values(i)
             End If
@@ -264,7 +269,7 @@ residuals = levObj.fvec
 SumOfSquares = Application.WorksheetFunction.SumProduct(residuals, residuals)
 
 'calculate unbiased variance
-size = T - AR_lag
+size = T - AR_lag - AR_lag - MA_lag - 1 + nOfFixedParams
 variance = SumOfSquares / size
 
 'calculate hessian of SS function for optimized coefficient values
@@ -546,3 +551,4 @@ FinalDimension:
     NumberOfDimensions = dimnum - 1
 
 End Function
+
